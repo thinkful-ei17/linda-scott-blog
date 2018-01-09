@@ -1,1 +1,4 @@
 node_modules
+.DS_Store
+
+# just put in the name of the folders you want to ignore 
