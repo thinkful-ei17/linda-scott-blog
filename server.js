@@ -14,9 +14,20 @@ const app = express();
 app.use(bodyParser.json());
 
 
-app.get('/', (req, res) => res.send('Hello World'));
-
-
+app.get('/posts', (req, res) => {
+  Article
+    .find()
+    .then(articles => { //results for find request
+      res.json({ //with the results, send json response with 
+        articles: articles.map( //object which contains key articles and the value is an array of the find response articles
+          (article) => article.serialize()) //each item in the array also serialize to include title, content and author
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error'});
+    });
+});
 
 
 
