@@ -29,7 +29,15 @@ app.get('/posts', (req, res) => {
     });
 });
 
-
+app.get('/posts/:id', (req, res) => {
+  Article
+    .findById(req.params.id)
+    .then(article => res.json(article.serialize()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error'});
+    });
+});
 
 
 // catch-all endpoint if client makes request to non-existent endpoint

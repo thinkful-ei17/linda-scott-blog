@@ -27,6 +27,7 @@ articleSchema.virtual('authorName').get(function () {
 // exposes *some* of the fields we want from the underlying data
 articleSchema.methods.serialize = function () {
   return {
+    id: this.id,
     title: this.title,
     content: this.content,
     author: this.authorName ,
