@@ -13,6 +13,8 @@ const { Article } = require('./models');
 const app = express();
 app.use(bodyParser.json());
 app.use(morgan());
+
+
 app.get('/posts', (req, res) => {
   Article
     .find()
@@ -43,10 +45,11 @@ app.post('/posts', (req, res) => {
 
   const requiredFields = ['title', 'content', 'author'];
 
-  for (let i = 0; i < requiredFields.length; i++){
+  for (let i = 0; i < requiredFields.length; i++) {    //looping through requiredFields array
     const field = requiredFields[i];
-    if(!(field in req.body)){
-      const message = `Missing ${field} in request body`;
+    
+    if (!(field in req.body)) {     //if the field is not in the request body
+      const message = `Missing ${field} in request body`;  //send a message to say its missing
       console.error(message);
       return res.status(400).send(message);
     }
@@ -70,24 +73,24 @@ app.post('/posts', (req, res) => {
 
 
 app.put('/posts/:id', (req, res) => {
-  if(!(req.params.id && req.body.id && req.params.id === req.body.id)){
+  if(!(req.params.id && req.body.id && req.params.id === req.body.id)){  //check if id is there and consistent
     return res.status(400).send(`Id in request path: ${req.params.id} and request body: ${req.body.id} must match`);
   }else{
     
-    const fieldsToUpdate = {};
+    const fieldsToUpdate = {};        //set an empty object
     const possibleFields = ['title', 'author', 'content'];
 
-    for(let i = 0; i < possibleFields.length; i++){
-      const field = possibleFields[i];
-      if (field in req.body) {
-        fieldsToUpdate[field] = req.body[field];
+    for(let i = 0; i < possibleFields.length; i++){  //loop through possible fields 
+      const field = possibleFields[i];                //   could do this with a forEach
+      if (field in req.body) {      //if the field is in the request body
+        fieldsToUpdate[field] = req.body[field];    //add a key:value pair to the fieldsToUpdate object
       }
     }
 
     Article
-      .findByIdAndUpdate(req.params.id, 
-        {$set: fieldsToUpdate},
-        {new: true}
+      .findByIdAndUpdate(req.params.id, //look-up with the params.id
+        {$set: fieldsToUpdate},     //update the fields from the fieldsToUpdate object 
+        {new: true}        //return the updated object
       )
       .then(result => res.json(result.serialize()))
       .catch(err => {
