@@ -51,7 +51,7 @@ app.post('/posts', (req, res) => {
       return res.status(400).send(message);
     }
   }
-  
+
   Article 
     .create({
       title: req.body.title,
@@ -67,6 +67,38 @@ app.post('/posts', (req, res) => {
       res.status(500).json({message: 'Internal server error'});
     });
 });
+
+
+app.put('/posts/:id', (req, res) => {
+  if(!(req.params.id && req.body.id && req.params.id === req.body.id)){
+    return res.status(400).send(`Id in request path: ${req.params.id} and request body: ${req.body.id} must match`);
+  }else{
+    
+    const fieldsToUpdate = {};
+    const possibleFields = ['title', 'author', 'content'];
+
+    for(let i = 0; i < possibleFields.length; i++){
+      const field = possibleFields[i];
+      if (field in req.body) {
+        fieldsToUpdate[field] = req.body[field];
+      }
+    }
+
+    Article
+      .findByIdAndUpdate(req.params.id, 
+        {$set: fieldsToUpdate},
+        {new: true}
+      )
+      .then(result => res.json(result.serialize()))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({message:'Internal Server Error'});
+      }
+      );
+  }
+});
+
+app.delete()
 
 
 // catch-all endpoint if client makes request to non-existent endpoint
