@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+const morgan = require('morgan');
 
 mongoose.Promise = global.Promise;
 
@@ -12,8 +12,7 @@ const { Article } = require('./models');
 
 const app = express();
 app.use(bodyParser.json());
-
-
+app.use(morgan());
 app.get('/posts', (req, res) => {
   Article
     .find()
