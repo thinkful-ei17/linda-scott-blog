@@ -33,7 +33,7 @@ app.get('/posts', (req, res) => {
 app.get('/posts/:id', (req, res) => {
   Article
     .findById(req.params.id)
-    .then(article => 
+    .then(article =>          //we should add a check in here for if the article exists (check if id is valid)
       res.json(article.serialize()))
     .catch(err => {
       console.error(err);
