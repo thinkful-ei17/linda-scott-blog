@@ -32,7 +32,8 @@ app.get('/posts', (req, res) => {
 app.get('/posts/:id', (req, res) => {
   Article
     .findById(req.params.id)
-    .then(article => res.json(article.serialize()))
+    .then(article => 
+      res.json(article.serialize()))
     .catch(err => {
       console.error(err);
       res.status(500).json({ message: 'Internal server error'});
@@ -98,7 +99,17 @@ app.put('/posts/:id', (req, res) => {
   }
 });
 
-app.delete()
+app.delete('/posts/:id', (req, res) => {
+  
+  Article
+    .findByIdAndRemove(req.params.id)
+    .then(article =>
+      res.status(204).end())
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({message: 'Internal Server Error'});
+    }); 
+});
 
 
 // catch-all endpoint if client makes request to non-existent endpoint
